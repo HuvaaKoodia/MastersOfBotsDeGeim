@@ -1,0 +1,35 @@
+﻿RULE OF THE GEIM
+
+entity turn update
+
+Has:
+-1 move per turn(cardinal directions only)
+-1 action per turn (eat 1 foodstuff, mine 1 diamond, attack 1 direction)
+
+1 energy reduction per turn if moved||acted
+
+
+
+Action explanations:
+
+move: can move to 1 direction for 1 step (only to empty tiles)
+mine diamond: (1 point per turn, reduce tile amount per 1)
+eat: reduces food tile amount per 1, adds 5 energy to entity
+attack: reduces target hp per 1 
+clone: creates a clone entity to an adjacent tile (requires 10 energy and a free tile)
+
+
+Map generation
+-randomized
+-3 rounds with same map, rotate start positions and starting AI.
+
+
+Simulation update
+-completely turn based execution
+-action and move can be done in any order
+
+
+Victory Condition:
+
+When all diamonds are mined or all entities have perished or only one AI is alive the simulation is over.
+The AI alive with the the most diamonds is the victor.
