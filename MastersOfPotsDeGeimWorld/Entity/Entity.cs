@@ -56,9 +56,9 @@ namespace MastersOfPotsDeGeimWorld
             energy -= 1;
             if (energy <= 0)
             {
+                Console.WriteLine("too bad is DEAD (starvation)!");
                 Dead = true;
                 _currentTile.EntityReference = null;
-
             }
         }
     }

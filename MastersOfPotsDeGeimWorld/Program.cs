@@ -10,6 +10,8 @@ namespace MastersOfPotsDeGeimWorld
         static Map map;
         static void Main(string[] args)
         {
+            Console.SetWindowSize(100, 60);
+
             int seed = 1111;
 
             map = new Map(30,30);
@@ -23,7 +25,7 @@ namespace MastersOfPotsDeGeimWorld
 
             Entities.Add(test_e);
 
-            DrawMap();
+            map.DrawMap();
             
             int turn = 1;
             while (true) {
@@ -41,8 +43,8 @@ namespace MastersOfPotsDeGeimWorld
                         --i;
                     }
                 }
-
-                DrawMap();
+                
+                map.DrawMap();
 
                 var input = Console.ReadLine();
                 var d=Entity.Direction.Right;
@@ -53,17 +55,6 @@ namespace MastersOfPotsDeGeimWorld
             Console.WriteLine();
         }
 
-        private static void DrawMap()
-        {
-            for (int j = 0; j < map.H; ++j)
-            {
-                for (int i = 0; i < map.W; ++i)
-                {
-                    var t = map.GetTile(i, j);
-                    Console.Write(t.GetCharacterCode() + "");
-                }
-                Console.WriteLine();
-            }
-        }
+        
     }
 }

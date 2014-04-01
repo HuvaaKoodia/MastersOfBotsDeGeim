@@ -121,5 +121,18 @@ namespace MastersOfPotsDeGeimWorld
             if (x < 0 || y < 0 || x > W - 1 || y > H - 1) return wall_tile;
             return map_tiles[x, y];
         }
+
+        public void DrawMap()
+        {
+            for (int j = 0; j < H; ++j)
+            {
+                for (int i = 0; i < W; ++i)
+                {
+                    var t = GetTile(i, j);
+                    Console.Write(t.GetCharacterCode() + "");
+                }
+                Console.WriteLine();
+            }
+        }
     }
 }
