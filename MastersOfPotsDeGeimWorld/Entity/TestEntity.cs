@@ -8,7 +8,7 @@ namespace MastersOfPotsDeGeimWorld
     public class TestEntity : Entity
     {
         Random r = new Random();
-        public TestEntity(Map mapref, int team) : base(mapref, team) {}
+        public TestEntity(Map mapref, Team team) : base(mapref, team) {}
 
         public override void Update()
         {

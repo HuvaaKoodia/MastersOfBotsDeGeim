@@ -8,6 +8,7 @@ namespace MastersOfPotsDeGeimWorld
     public class Entity
     {
         public enum Direction{Right=0,Up,Left,Down};
+        public Team MyTeam { get; private set; }
         public int TeamNumber { get; private set;}
         public bool Dead { get;private set;}
 
@@ -20,8 +21,10 @@ namespace MastersOfPotsDeGeimWorld
         public int X { get { return _x; } }
         public int Y { get { return _y; } }
 
-        public Entity(Map mapref,int team) {
-            TeamNumber = team;
+        public Entity(Map mapref, Team team) {
+            MyTeam = team;
+            MyTeam.AddTeamMember(this);
+            TeamNumber = team.Number;
             MapReference = mapref;
         }
 
@@ -76,9 +79,17 @@ namespace MastersOfPotsDeGeimWorld
             if (energy <= 0)
             {
                 Console.WriteLine("too bad is DEAD (starvation)!");
-                Dead = true;
-                _currentTile.EntityReference = null;
+                Die();
             }
+        }
+
+        void Die()
+        {
+            Dead = true;
+            _currentTile.EntityReference = null;
+
+            MapReference.GameEntities.Remove(this);
+            MyTeam.TeamMemberDied(this);
         }
     }
 }
