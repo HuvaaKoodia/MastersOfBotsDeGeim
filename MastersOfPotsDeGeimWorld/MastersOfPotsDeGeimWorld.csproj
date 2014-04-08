@@ -49,6 +49,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Map\Tile.cs" />
+    <Compile Include="Team\Team.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="GameSpecification.txt" />

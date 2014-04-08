@@ -8,6 +8,7 @@ namespace MastersOfPotsDeGeimWorld
     public class Entity
     {
         public enum Direction{Right=0,Up,Left,Down};
+        public Team MyTeam { get; private set; }
         public int TeamNumber { get; private set;}
         public bool Dead { get;private set;}
 
@@ -20,8 +21,11 @@ namespace MastersOfPotsDeGeimWorld
         public int X { get { return _x; } }
         public int Y { get { return _y; } }
 
-        public Entity(Map mapref,int team) {
-            TeamNumber = team;
+        public Entity(Map mapref, Team team)
+        {
+            MyTeam = team;
+            MyTeam.AddTeamMember(this);
+            TeamNumber = team.Number;
             MapReference = mapref;
         }
 
@@ -35,7 +39,8 @@ namespace MastersOfPotsDeGeimWorld
             return MapReference.GetTile(_x + x, _y + y).IsEmpty();
         }
 
-        protected void MoveTo(Direction d) {
+        protected void MoveTo(Direction d)
+        {
             int x=0,y=0;
             if (d == Direction.Right) x = 1;
             else if (d == Direction.Left) x = -1;
@@ -56,12 +61,12 @@ namespace MastersOfPotsDeGeimWorld
         /// <param name="y"></param>
         protected void Move(int x,int  y)
         {
-            
             SetPosition(_x + x, _y + y);
         }
 
         public void SetPosition(int x, int y) {
-            if (_currentTile != null) {
+            if (_currentTile != null)
+            {
                 _currentTile.EntityReference = null;
             }
             _x = x; _y = y;
@@ -71,14 +76,23 @@ namespace MastersOfPotsDeGeimWorld
 
         public virtual void Update(){}
 
-        public void LateUpdate() {
+        public void LateUpdate()
+        {
             energy -= 1;
             if (energy <= 0)
             {
                 Console.WriteLine("too bad is DEAD (starvation)!");
-                Dead = true;
-                _currentTile.EntityReference = null;
+                Die();
             }
+        }
+
+        void Die()
+        {
+            Dead = true;
+            _currentTile.EntityReference = null;
+
+            MapReference.GameEntities.Remove(this);
+            MyTeam.TeamMemberDied(this);
         }
     }
 }

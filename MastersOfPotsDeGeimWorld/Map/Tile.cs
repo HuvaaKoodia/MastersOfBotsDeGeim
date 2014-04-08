@@ -35,6 +35,18 @@ namespace MastersOfPotsDeGeimWorld
             return "E"+EntityReference.TeamNumber;
         }
 
+        public ConsoleColor GetCharacterColor()
+        {
+            if (EntityReference == null)
+            {
+                if (TileType == Type.empty) return ConsoleColor.White;
+                else if (TileType == Type.food) return ConsoleColor.Green;
+                else if (TileType == Type.wall) return ConsoleColor.Black;
+                else if (TileType == Type.diamond) return ConsoleColor.Cyan;
+            }
+            return EntityReference.MyTeam.Color;
+        }
+
         public bool IsType(Type type)
         {
             return TileType == type;

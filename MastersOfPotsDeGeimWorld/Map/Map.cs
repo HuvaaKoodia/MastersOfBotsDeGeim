@@ -133,7 +133,10 @@ namespace MastersOfPotsDeGeimWorld
 
         public void GameLoop() {
             Turn = 0;
-            while (true)
+            
+            bool gameOn = true;
+
+            while (gameOn)
             {
                 
                 
@@ -143,11 +146,16 @@ namespace MastersOfPotsDeGeimWorld
 
                     Console.WriteLine("Input:\n- e to exit\n- anykey to continue");
                     var input = Console.ReadLine();
-                    if (input.StartsWith("e")) break;
 
+                    if (input.StartsWith("e"))
+                    {
+                        gameOn = false;
+                        break;
+                    }
                     Console.WriteLine("Turn " + Turn);
 
                     //updates
+                    entity.MyTeam.Update(entity);
                     entity.Update();
                     entity.LateUpdate();
 
@@ -167,10 +175,15 @@ namespace MastersOfPotsDeGeimWorld
                 for (int i = 0; i < W; ++i)
                 {
                     var t = GetTile(i, j);
+
+                    Console.ForegroundColor = t.GetCharacterColor();
                     Console.Write(t.GetCharacterCode() + "");
+                    Console.Write(" ");
                 }
                 Console.WriteLine();
             }
+
+            Console.ResetColor();
         }
     }
 }
