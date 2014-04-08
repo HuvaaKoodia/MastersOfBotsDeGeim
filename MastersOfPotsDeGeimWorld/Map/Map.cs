@@ -138,10 +138,9 @@ namespace MastersOfPotsDeGeimWorld
 
             while (gameOn)
             {
-                
-                
                 for (int e = GameEntities.Count-1; e >= 0; --e)
                 {
+                    DrawMap();
                     var entity = GameEntities[e];
 
                     Console.WriteLine("Input:\n- e to exit\n- anykey to continue");
@@ -161,7 +160,7 @@ namespace MastersOfPotsDeGeimWorld
 
                     if (entity.Dead) GameEntities.Remove(entity);
 
-                    DrawMap();
+                   
                 }
 
                 if (GameEntities.Count == 0) break;

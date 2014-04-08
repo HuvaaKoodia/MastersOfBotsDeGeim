@@ -20,11 +20,9 @@ namespace MastersOfPotsDeGeimWorld
             Team testTeam = new Team("Testi", 1, ConsoleColor.Yellow);
 
             var test_e = new TestEntity(map, testTeam);
-
             test_e.SetPosition(4, 3);
 
             map.GameEntities.Add(test_e);
-            map.DrawMap();
             
             map.GameLoop();
 

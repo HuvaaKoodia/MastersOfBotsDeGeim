@@ -9,15 +9,16 @@ namespace MastersOfPotsDeGeimWorld
     {
         public enum Direction{Right=0,Up,Left,Down};
         public Team MyTeam { get; private set; }
-        public int TeamNumber { get; private set;}
+        public int TeamNumber { get { return MyTeam.Number; } }
         public bool Dead { get;private set;}
 
         protected Map MapReference;
-        protected int energy=10;
+        protected int energy=50;
 
         private int _x, _y;
         private Tile _currentTile;
 
+        public Tile CurrentTile { get { return _currentTile; } }
         public int X { get { return _x; } }
         public int Y { get { return _y; } }
 
@@ -25,7 +26,6 @@ namespace MastersOfPotsDeGeimWorld
         {
             MyTeam = team;
             MyTeam.AddTeamMember(this);
-            TeamNumber = team.Number;
             MapReference = mapref;
         }
 
@@ -93,6 +93,29 @@ namespace MastersOfPotsDeGeimWorld
 
             MapReference.GameEntities.Remove(this);
             MyTeam.TeamMemberDied(this);
+        }
+
+        //action functions
+        public bool EatFrom(Tile tile) 
+        {
+            if (tile.IsType(Tile.Type.food)&&tile.Amount>0)
+            {
+                energy += 20;//DEV. to a constant
+                --tile.Amount;
+                return true;
+            }
+            return false;
+        }
+
+        public bool DigFrom(Tile tile)
+        {
+            if (tile.IsType(Tile.Type.diamond) && tile.Amount > 0)
+            {
+                MyTeam.AddDiamond();
+                --tile.Amount;
+                return true;
+            }
+            return false;
         }
     }
 }
