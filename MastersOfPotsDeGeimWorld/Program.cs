@@ -21,38 +21,18 @@ namespace MastersOfPotsDeGeimWorld
             var test_e = new TestEntity(map, 1);
             test_e.SetPosition(4, 3);
 
-            var Entities=new List<Entity>();
-
-            Entities.Add(test_e);
-
+            map.GameEntities.Add(test_e);
             map.DrawMap();
             
-            int turn = 1;
-            while (true) {
-                Console.WriteLine("Turn: " + turn);
-                ++turn;
+            map.GameLoop();
 
-                for (int i = 0; i < Entities.Count;++i)
-                {
-                    var e= Entities[i];
-                    e.Update();
-                    e.LateUpdate();
-
-                    if (e.Dead) {
-                        Entities.Remove(e);
-                        --i;
-                    }
-                }
-                
-                map.DrawMap();
-
+            Console.WriteLine("Program over ( e to exit )");
+            while (true)
+            {
                 var input = Console.ReadLine();
-                var d=Entity.Direction.Right;
-                input=input.ToLower();
-                if (input.StartsWith("exit")) break;
-            }
 
-            Console.WriteLine();
+                if (input.StartsWith("e")) break;
+            }
         }
 
         

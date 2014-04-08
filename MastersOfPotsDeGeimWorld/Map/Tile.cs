@@ -9,12 +9,13 @@ namespace MastersOfPotsDeGeimWorld
     {
         public enum Type { empty, food, diamond, wall };
 
+
         public Type TileType;
-        public int Amount;
+        public int Amount,X,Y;
         public int AmountCharacterCode { get {return Math.Min(9,Math.Max(0,Amount));} }
         public Entity EntityReference;
 
-        public Tile() { }
+        public Tile(int x, int y) { X = x; Y = y; }
 
         public Tile(Type type) { TileType = type; }
 

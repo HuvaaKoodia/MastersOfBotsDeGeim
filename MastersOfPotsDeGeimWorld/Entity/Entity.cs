@@ -17,6 +17,9 @@ namespace MastersOfPotsDeGeimWorld
         private int _x, _y;
         private Tile _currentTile;
 
+        public int X { get { return _x; } }
+        public int Y { get { return _y; } }
+
         public Entity(Map mapref,int team) {
             TeamNumber = team;
             MapReference = mapref;
@@ -38,6 +41,22 @@ namespace MastersOfPotsDeGeimWorld
             else if (d == Direction.Left) x = -1;
             else if (d == Direction.Up) y = 1;
             else if (d == Direction.Down) y = -1;
+            SetPosition(_x + x, _y + y);
+        }
+
+        protected bool IsDirectionFree(int x, int y)
+        {
+            return MapReference.GetTile(_x + x, _y + y).IsEmpty();
+        }
+
+        /// <summary>
+        /// Move a relative amount.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        protected void Move(int x,int  y)
+        {
+            
             SetPosition(_x + x, _y + y);
         }
 

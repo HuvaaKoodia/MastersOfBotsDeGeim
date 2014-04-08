@@ -5,17 +5,22 @@ using System.Text;
 
 namespace MastersOfPotsDeGeimWorld
 {
+    /// <summary>
+    /// Has both the map and all game entities for convenience.
+    /// </summary>
     public class Map
     {
-        Tile[,] map_tiles;
+        public Tile[,] map_tiles { get; private set; }
+        public List<Entity> GameEntities { get; private set; }
 
         int diamond_amount = 0;
 
         public int W { get { return map_tiles.GetLength(0); } }
         public int H { get { return map_tiles.GetLength(1); } }
         
-        public Map(int w,int h) {
+        public Map(int w,int h){
             map_tiles= new Tile[w,h];
+            GameEntities = new List<Entity>();
         }
 
         public void GenerateMap(int seed,int diamonds, int foods,int walls) {
@@ -27,7 +32,7 @@ namespace MastersOfPotsDeGeimWorld
             {
                 for (int j = 0; j < H; ++j)
                 {
-                    map_tiles[i, j] = new Tile();
+                    map_tiles[i, j] = new Tile(i,j);
                 }
             }
 
@@ -120,6 +125,38 @@ namespace MastersOfPotsDeGeimWorld
         {
             if (x < 0 || y < 0 || x > W - 1 || y > H - 1) return wall_tile;
             return map_tiles[x, y];
+        }
+
+        //logic
+
+        public int Turn { get; private set; }
+
+        public void GameLoop() {
+            while (true)
+            {
+                Console.WriteLine("Input:\n-e to exit\n-anykey to continue");
+                
+                //if (input.StartsWith("d")) entity.SenseDanger = !entity.SenseDanger;
+                //if (input.StartsWith("a")) entity.UnderAttack = !entity.UnderAttack;
+                Turn = 0;
+                for (int e = GameEntities.Count-1; e >= 0; --e)
+                {
+                    var entity = GameEntities[e];
+                    var input = Console.ReadLine();
+                    if (input.StartsWith("e")) break;
+                    Console.WriteLine("Turn " + Turn);
+
+                    //updates
+                    entity.Update();
+                    entity.LateUpdate();
+
+                    if (entity.Dead) GameEntities.Remove(entity);
+
+                    DrawMap();
+                }
+
+                if (GameEntities.Count == 0) break;
+            }
         }
 
         public void DrawMap()
