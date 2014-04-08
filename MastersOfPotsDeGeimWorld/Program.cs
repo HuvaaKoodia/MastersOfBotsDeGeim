@@ -28,13 +28,8 @@ namespace MastersOfPotsDeGeimWorld
             
             map.GameLoop();
 
-            Console.WriteLine("Program over ( e to exit )");
-            while (true)
-            {
-                var input = Console.ReadLine();
-
-                if (input.StartsWith("e")) break;
-            }
+            Console.WriteLine("Program over ( anykey to exit )");
+            Console.ReadLine();
         }
 
         

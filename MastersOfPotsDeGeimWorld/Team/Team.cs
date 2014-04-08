@@ -51,7 +51,7 @@ namespace MastersOfPotsDeGeimWorld
             TeamMembers.Add(teamMember);
         }
 
-        public virtual void Update()
+        public virtual void Update(Entity currentEntity)
         {
 
         }

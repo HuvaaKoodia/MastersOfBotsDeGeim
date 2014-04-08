@@ -21,7 +21,8 @@ namespace MastersOfPotsDeGeimWorld
         public int X { get { return _x; } }
         public int Y { get { return _y; } }
 
-        public Entity(Map mapref, Team team) {
+        public Entity(Map mapref, Team team)
+        {
             MyTeam = team;
             MyTeam.AddTeamMember(this);
             TeamNumber = team.Number;
@@ -38,7 +39,8 @@ namespace MastersOfPotsDeGeimWorld
             return MapReference.GetTile(_x + x, _y + y).IsEmpty();
         }
 
-        protected void MoveTo(Direction d) {
+        protected void MoveTo(Direction d)
+        {
             int x=0,y=0;
             if (d == Direction.Right) x = 1;
             else if (d == Direction.Left) x = -1;
@@ -59,12 +61,12 @@ namespace MastersOfPotsDeGeimWorld
         /// <param name="y"></param>
         protected void Move(int x,int  y)
         {
-            
             SetPosition(_x + x, _y + y);
         }
 
         public void SetPosition(int x, int y) {
-            if (_currentTile != null) {
+            if (_currentTile != null)
+            {
                 _currentTile.EntityReference = null;
             }
             _x = x; _y = y;
@@ -74,7 +76,8 @@ namespace MastersOfPotsDeGeimWorld
 
         public virtual void Update(){}
 
-        public void LateUpdate() {
+        public void LateUpdate()
+        {
             energy -= 1;
             if (energy <= 0)
             {

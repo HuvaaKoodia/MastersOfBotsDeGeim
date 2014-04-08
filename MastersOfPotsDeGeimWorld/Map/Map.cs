@@ -154,6 +154,7 @@ namespace MastersOfPotsDeGeimWorld
                     Console.WriteLine("Turn " + Turn);
 
                     //updates
+                    entity.MyTeam.Update(entity);
                     entity.Update();
                     entity.LateUpdate();
 
