@@ -132,18 +132,19 @@ namespace MastersOfPotsDeGeimWorld
         public int Turn { get; private set; }
 
         public void GameLoop() {
+            Turn = 0;
             while (true)
             {
-                Console.WriteLine("Input:\n-e to exit\n-anykey to continue");
                 
-                //if (input.StartsWith("d")) entity.SenseDanger = !entity.SenseDanger;
-                //if (input.StartsWith("a")) entity.UnderAttack = !entity.UnderAttack;
-                Turn = 0;
+                
                 for (int e = GameEntities.Count-1; e >= 0; --e)
                 {
                     var entity = GameEntities[e];
+
+                    Console.WriteLine("Input:\n- e to exit\n- anykey to continue");
                     var input = Console.ReadLine();
                     if (input.StartsWith("e")) break;
+
                     Console.WriteLine("Turn " + Turn);
 
                     //updates

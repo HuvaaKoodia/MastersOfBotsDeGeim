@@ -30,11 +30,8 @@ namespace MastersOfPotsDeGeimWorld
             while (true)
             {
                 var input = Console.ReadLine();
-
                 if (input.StartsWith("e")) break;
             }
         }
-
-        
     }
 }
