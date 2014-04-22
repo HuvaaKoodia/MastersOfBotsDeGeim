@@ -18,11 +18,13 @@ namespace MastersOfPotsDeGeimWorld
             map.GenerateMap(seed,10,20,25);
 
             Team testTeam = new Team("Testi", 1, ConsoleColor.Yellow);
+            Team anotherTeam = new Team("Lol", 2, ConsoleColor.Magenta);
 
             var test_e = new TestEntity(map, testTeam);
             test_e.SetPosition(4, 3);
 
-            map.GameEntities.Add(test_e);
+            var test_2 = new TestEntity(map, anotherTeam);
+            test_2.SetPosition(10, 10);
             
             map.GameLoop();
 

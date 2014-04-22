@@ -22,11 +22,17 @@ namespace MastersOfPotsDeGeimWorld
         public int X { get { return _x; } }
         public int Y { get { return _y; } }
 
+        bool acted;
+
         public Entity(Map mapref, Team team)
         {
             MyTeam = team;
             MyTeam.AddTeamMember(this);
             MapReference = mapref;
+
+            mapref.GameEntities.Add(this);
+
+            acted = false;
         }
 
         protected bool IsDirectionFree(Direction d)
@@ -47,6 +53,8 @@ namespace MastersOfPotsDeGeimWorld
             else if (d == Direction.Up) y = 1;
             else if (d == Direction.Down) y = -1;
             SetPosition(_x + x, _y + y);
+
+            acted = true;
         }
 
         protected bool IsDirectionFree(int x, int y)
@@ -62,6 +70,7 @@ namespace MastersOfPotsDeGeimWorld
         protected void Move(int x,int  y)
         {
             SetPosition(_x + x, _y + y);
+            acted = true;
         }
 
         public void SetPosition(int x, int y) {
@@ -78,7 +87,12 @@ namespace MastersOfPotsDeGeimWorld
 
         public void LateUpdate()
         {
-            energy -= 1;
+            if (acted)
+            {
+                energy -= 1;
+                acted = false;
+            }
+
             if (energy <= 0)
             {
                 Console.WriteLine("too bad is DEAD (starvation)!");
@@ -102,6 +116,7 @@ namespace MastersOfPotsDeGeimWorld
             {
                 energy += 20;//DEV. to a constant
                 --tile.Amount;
+                acted = true;
                 return true;
             }
             return false;
@@ -113,9 +128,39 @@ namespace MastersOfPotsDeGeimWorld
             {
                 MyTeam.AddDiamond();
                 --tile.Amount;
+                acted = true;
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Starts checking from upper left tile of calling entity, checks every "row" of tiles, 
+        /// and places clone to first free tile
+        /// Returns true if a tile was found, otherwise false
+        /// </summary>
+        /// <param name="clone"></param>
+        /// <returns></returns>
+        public bool PlaceCloneToFirstOpenNeigbourTile(Entity clone)
+        {
+            for (int y = -1; y < 2; y++)
+            {
+                for (int x = -1; x < 2; x++)
+                {
+                    if (MapReference.GetTile(_x + x, _y + y).CanMoveTo())
+                    {
+                        PlaceCloneToTile(clone, MapReference.GetTile(_x + x, _y + y));
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public void PlaceCloneToTile(Entity clone, Tile tile)
+        {
+            clone.SetPosition(tile.X, tile.Y);
         }
     }
 }
