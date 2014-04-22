@@ -13,7 +13,7 @@ namespace MastersOfPotsDeGeimWorld
         public bool Dead { get;private set;}
 
         protected Map MapReference;
-        protected int energy=50;
+        protected int energy=30;
 
         private int _x, _y;
         private Tile _currentTile;
