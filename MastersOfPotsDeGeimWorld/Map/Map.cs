@@ -135,27 +135,62 @@ namespace MastersOfPotsDeGeimWorld
 
             Console.WriteLine("Game loop start:");
             Turn = 0;
-            bool gameOn = true;
+            bool gameOn = true, allowInput=true;
+            int autoRun = 0;
             DrawMap();
 
             while (gameOn)
             {
                 for (int e = GameEntities.Count-1; e >= 0; --e)
                 {
+                    ++Turn;
                     var entity = GameEntities[e];
 
-                    Console.WriteLine("Input:\n- e to exit\n- anykey to continue");
-                    var input = Console.ReadLine();
+                    //auto run logic
+                    if (autoRun != 0) {
+                        allowInput = false;
 
-                    if (input.StartsWith("e"))
-                    {
-                        gameOn = false;
-                        break;
+                        if (autoRun > 0) --autoRun;
+                        if (autoRun == 0) {
+                            allowInput = true;
+                        }
                     }
-                    else{
+
+                    //input
+                    if (allowInput)
+                    {
+                        Console.WriteLine("Input:\n- \"exit\" to end program\n- \"auto n\" to autorun simulation.\n(n = amount of turns, no parameter runs the rest of the simulation)\n anykey to continue");
+                        var input = Console.ReadLine();
+
+                        if (input == ("exit"))
+                        {
+                            gameOn = false;
+                            break;
+                        }
+                        else if (input.StartsWith("auto"))
+                        {
+                            try
+                            {
+                                if (input.Length > 4)
+                                {
+                                    int steps = int.Parse(input.Substring(5));
+                                    autoRun = steps;
+                                }
+                                else {
+                                    autoRun = -1;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Faulty syntax. Try: \"auto 100\"");
+                            }
+                        }
+                        else
+                        {
 #if DEBUG
-                        entity.GetInput(input);
+                            entity.GetInput(input);
 #endif
+                        }
                     }
                     //updates
                     entity.MyTeam.Update(entity);

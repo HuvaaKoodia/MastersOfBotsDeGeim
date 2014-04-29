@@ -67,9 +67,19 @@ namespace MastersOfPotsDeGeimWorld
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        protected void Move(int x,int  y)
+        protected void MoveToDir(int x,int  y)
         {
-            SetPosition(_x + x, _y + y);
+            MoveToPos(_x + x, _y + y);
+        }
+
+        /// <summary>
+        /// Move to an absolute position.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        protected void MoveToPos(int x, int y)
+        {
+            SetPosition(x, y);
             acted = true;
         }
 
