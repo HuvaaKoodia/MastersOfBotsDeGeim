@@ -55,5 +55,10 @@ namespace MastersOfPotsDeGeimWorld
         {
 
         }
+
+        public override string ToString() 
+        {
+            return "Team " + Name + " diamonds: " + DiamondCount + " units: " + TeamMembers.Count + "";
+        }
     }
 }

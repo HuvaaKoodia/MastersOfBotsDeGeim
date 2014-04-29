@@ -9,9 +9,20 @@ namespace MastersOfPotsDeGeimWorld
     {
         public enum Type { empty, food, diamond, wall };
 
+        int _amount=0;
 
         public Type TileType;
-        public int Amount,X,Y;
+        public int X,Y;
+
+        public int Amount { 
+            get { return _amount; } 
+            set { 
+                _amount = value;
+                if (_amount == 0) {
+                    TileType = Type.empty;
+                }
+            }
+        }
         public int AmountCharacterCode { get {return Math.Min(9,Math.Max(0,Amount));} }
         public Entity EntityReference;
 

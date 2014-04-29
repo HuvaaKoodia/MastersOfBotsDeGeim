@@ -14,7 +14,7 @@ namespace MastersOfPotsDeGeimWorld
 
         protected Map MapReference;
         protected int energy=30;
-
+        
         private int _x, _y;
         private Tile _currentTile;
 
@@ -162,5 +162,17 @@ namespace MastersOfPotsDeGeimWorld
         {
             clone.SetPosition(tile.X, tile.Y);
         }
+
+        public override string ToString()
+        {
+            return "Unit energy:" + energy;
+        }
+
+        /// <summary>
+        /// Receives user input from the update loop.
+        /// Only in debug mode.
+        /// </summary>
+        /// <param name="input"></param>
+        public virtual void GetInput(string input){}
     }
 }

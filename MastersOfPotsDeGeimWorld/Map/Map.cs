@@ -132,15 +132,16 @@ namespace MastersOfPotsDeGeimWorld
         public int Turn { get; private set; }
 
         public void GameLoop() {
+
+            Console.WriteLine("Game loop start:");
             Turn = 0;
-            
             bool gameOn = true;
+            DrawMap();
 
             while (gameOn)
             {
                 for (int e = GameEntities.Count-1; e >= 0; --e)
                 {
-                    DrawMap();
                     var entity = GameEntities[e];
 
                     Console.WriteLine("Input:\n- e to exit\n- anykey to continue");
@@ -151,21 +152,32 @@ namespace MastersOfPotsDeGeimWorld
                         gameOn = false;
                         break;
                     }
-                    Console.WriteLine("Turn " + Turn);
-
+                    else{
+#if DEBUG
+                        entity.GetInput(input);
+#endif
+                    }
                     //updates
                     entity.MyTeam.Update(entity);
                     entity.Update();
                     entity.LateUpdate();
 
-                    if (entity.Dead) GameEntities.Remove(entity);
+                    //drawing
+                    Console.WriteLine("Turn " + Turn);
+                    Console.WriteLine(entity.MyTeam);
+                    Console.WriteLine(entity);
 
-                   
+                    DrawMap();
+
+                    if (entity.Dead) GameEntities.Remove(entity);
                 }
 
                 if (GameEntities.Count == 0) break;
             }
         }
+
+
+
 
         public void DrawMap()
         {
