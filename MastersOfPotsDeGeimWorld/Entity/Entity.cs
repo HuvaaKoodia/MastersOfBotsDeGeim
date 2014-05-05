@@ -7,14 +7,19 @@ namespace MastersOfPotsDeGeimWorld
 {
     public class Entity
     {
+        private static int CloneEnergyCost=25,MaxEnergy=50;
         public enum Direction{Right=0,Up,Left,Down};
+        
         public Team MyTeam { get; private set; }
         public int TeamNumber { get { return MyTeam.Number; } }
         public bool Dead { get;private set;}
+        public string Name { get; protected set; }
 
         protected Map MapReference;
         protected int energy=30;
         
+        public int Energy{get{return energy;} set{energy=value;energy=Math.Max(0,Math.Min(energy,MaxEnergy));}}
+
         private int _x, _y;
         private Tile _currentTile;
 
@@ -26,6 +31,7 @@ namespace MastersOfPotsDeGeimWorld
 
         public Entity(Map mapref, Team team)
         {
+            Name = "Temp Entity";
             MyTeam = team;
             MyTeam.AddTeamMember(this);
             MapReference = mapref;
@@ -173,9 +179,18 @@ namespace MastersOfPotsDeGeimWorld
             clone.SetPosition(tile.X, tile.Y);
         }
 
+        public bool HasEnoughEnergyToClone() {
+            return energy >= CloneEnergyCost;
+        }
+
+        public void SpendCloningEnergy()
+        {
+            energy -= CloneEnergyCost;
+        }
+
         public override string ToString()
         {
-            return "Unit energy:" + energy;
+            return Name+": energy:" + energy;
         }
 
         /// <summary>
