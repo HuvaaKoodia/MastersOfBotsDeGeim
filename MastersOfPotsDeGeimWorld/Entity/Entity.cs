@@ -7,7 +7,7 @@ namespace MastersOfPotsDeGeimWorld
 {
     public class Entity
     {
-        private static int CloneEnergyCost=25,MaxEnergy=50;
+        private static int CloneEnergyCost=25,MaxEnergy=50, DamagePerAttack=10;
         public enum Direction{Right=0,Up,Left,Down};
         
         public Team MyTeam { get; private set; }
@@ -148,6 +148,35 @@ namespace MastersOfPotsDeGeimWorld
                 return true;
             }
             return false;
+        }
+
+        public bool Attack(Tile tile)
+        {
+            Entity enemy = tile.EntityReference;
+
+            if (enemy == null)
+                return false;
+
+            return Attack(enemy);
+        }
+
+        public bool Attack(Entity enemy)
+        {
+            if (enemy == null)
+                return false;
+
+            acted = true;
+            enemy.TakeDamage();
+
+            return true;
+        }
+
+        public void TakeDamage()
+        {
+            Energy -= DamagePerAttack;
+
+            if (Energy <= 0)
+                Die();
         }
 
         /// <summary>
