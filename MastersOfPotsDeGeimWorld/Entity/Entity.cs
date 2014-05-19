@@ -16,9 +16,9 @@ namespace MastersOfPotsDeGeimWorld
         public string Name { get; protected set; }
 
         protected Map MapReference;
-        protected int energy=30;
-        
-        public int Energy{get{return energy;} set{energy=value;energy=Math.Max(0,Math.Min(energy,MaxEnergy));}}
+        private int _energy=30;
+
+        public int Energy { get { return _energy; } set { _energy = value; _energy = Math.Max(0, Math.Min(_energy, MaxEnergy)); } }
 
         private int _x, _y;
         private Tile _currentTile;
@@ -105,11 +105,11 @@ namespace MastersOfPotsDeGeimWorld
         {
             if (acted)
             {
-                energy -= 1;
+                Energy -= 1;
                 acted = false;
             }
 
-            if (energy <= 0)
+            if (Energy == 0)
             {
                 Console.WriteLine("too bad is DEAD (starvation)!");
                 Die();
@@ -130,7 +130,7 @@ namespace MastersOfPotsDeGeimWorld
         {
             if (tile.IsType(Tile.Type.food)&&tile.Amount>0)
             {
-                energy += 20;//DEV. to a constant
+                Energy += 20;//DEV. to a constant
                 --tile.Amount;
                 acted = true;
                 return true;
@@ -180,17 +180,17 @@ namespace MastersOfPotsDeGeimWorld
         }
 
         public bool HasEnoughEnergyToClone() {
-            return energy >= CloneEnergyCost;
+            return Energy >= CloneEnergyCost;
         }
 
         public void SpendCloningEnergy()
         {
-            energy -= CloneEnergyCost;
+            Energy -= CloneEnergyCost;
         }
 
         public override string ToString()
         {
-            return Name+": energy:" + energy;
+            return Name + ": energy:" + Energy;
         }
 
         /// <summary>
