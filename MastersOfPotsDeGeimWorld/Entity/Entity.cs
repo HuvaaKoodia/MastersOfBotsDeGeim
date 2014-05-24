@@ -7,7 +7,7 @@ namespace MastersOfPotsDeGeimWorld
 {
     public class Entity
     {
-        private static int CloneEnergyCost=25,MaxEnergy=50, DamagePerAttack=10;
+        public const int CloneEnergyCost=25,MaxEnergy=50, DamagePerAttack=10, EnergyGainFromEating=20;
         public enum Direction{Right=0,Up,Left,Down};
         
         public Team MyTeam { get; private set; }
@@ -130,7 +130,7 @@ namespace MastersOfPotsDeGeimWorld
         {
             if (tile.IsType(Tile.Type.food)&&tile.Amount>0)
             {
-                Energy += 20;//DEV. to a constant
+                Energy += EnergyGainFromEating;
                 --tile.Amount;
                 acted = true;
                 return true;
@@ -166,18 +166,22 @@ namespace MastersOfPotsDeGeimWorld
                 return false;
 
             acted = true;
-            enemy.TakeDamage();
+            enemy.TakeDamage(this);
 
             return true;
         }
 
-        public void TakeDamage()
+        public void TakeDamage(Entity attacker)
         {
             Energy -= DamagePerAttack;
+
+            OnTakeDamage(attacker);
 
             if (Energy <= 0)
                 Die();
         }
+
+        protected virtual void OnTakeDamage(Entity attacker) { }
 
         /// <summary>
         /// Starts checking from upper left tile of calling entity, checks every "row" of tiles, 

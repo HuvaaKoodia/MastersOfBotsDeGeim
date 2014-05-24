@@ -12,6 +12,8 @@ namespace MastersOfPotsDeGeimWorld
     /// </summary>
     public class Map
     {
+        public bool DisableVictoryConditions = false;
+
         public Tile[,] map_tiles { get; private set; }
         public List<Entity> GameEntities { get; private set; }
         public List<Team> Teams { get; private set; }
@@ -245,11 +247,11 @@ namespace MastersOfPotsDeGeimWorld
 
                     if (entity.Dead) GameEntities.Remove(entity);
 
-                    Console.Write(s_wrt.ToString());
+                    Console.Write(s_wrt.ToString()+"\n");
                     s_wrt.GetStringBuilder().Clear();
 
 
-
+                    if (DisableVictoryConditions) continue;
                     //game over (lazy polling checks)
                     if (GameEntities.Count == 0){
                         gameOn=false;
