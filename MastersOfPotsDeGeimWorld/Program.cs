@@ -14,8 +14,8 @@ namespace MastersOfPotsDeGeimWorld
 
             int seed = 1111;
 
-            map = new Map(30,30);
-            map.GenerateMap(seed,10,20,25);
+            map = new Map(30, 30);
+            map.GenerateMap(seed, 10, 20, 25);
 
             Team testTeam = new Team("Testi", 1, ConsoleColor.Yellow);
             Team anotherTeam = new Team("Lol", 2, ConsoleColor.Magenta);

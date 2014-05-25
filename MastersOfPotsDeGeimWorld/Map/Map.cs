@@ -23,13 +23,14 @@ namespace MastersOfPotsDeGeimWorld
         public int W { get { return map_tiles.GetLength(0); } }
         public int H { get { return map_tiles.GetLength(1); } }
         
-        public Map(int w,int h){
-            map_tiles= new Tile[w,h];
+        public Map( int w,int h){
+            map_tiles = new Tile[w, h];
             GameEntities = new List<Entity>();
             Teams=new List<Team>();
         }
 
         public void GenerateMap(int seed,int diamonds, int foods,int walls) {
+            
             diamond_amount = diamonds;
 
             var rand = new Random(seed);
@@ -146,9 +147,49 @@ namespace MastersOfPotsDeGeimWorld
 
         public void GameLoop() {
 
-            Console.WriteLine("Game loop start:");
+            Console.WriteLine("Masters of Bots : Game of Diamonds. V 1.0");
+
+            Console.WriteLine("Competing teams: ");
+            foreach (var t in Teams) {
+                Console.WriteLine("- Team "+t.Name);
+            }
+            Console.WriteLine();
+            //pre simulation set up
+            var r=new Random();
+            int seed = r.Next();
+
+            while (true) {
+                Console.WriteLine("Current seed: "+seed);
+
+                Console.WriteLine("Input:\n- \"c\" to change seed\n- \"r\" to randomize seed\n\n-\"s\" to start");
+                var input = Console.ReadLine();
+                if (input == "c") {
+                    Console.WriteLine("Input new seed.");
+                    var inp=Console.ReadLine();
+                    seed = inp.GetHashCode();
+                }
+                if (input == "r")
+                {
+                    Console.WriteLine("Randomizing seed.");
+                    seed = r.Next();
+                }
+                if (input == "s")
+                {
+                    
+                    break;
+                }
+            }
+            Console.Clear();
+            Console.WriteLine("Simulation Start\n\n");
+            GenerateMap(seed, 10, 10, 20);
+
+            //DEV.temp hax team starting positions
+            Teams[0].AddUnitToMap(2,2);
+            Teams[1].AddUnitToMap(W-3,H-3);
+
+            //simulation
             Turn = 0;
-            bool gameOn = true, allowInput=true;
+            bool gameOn = true, allowInput=true, draw_map_full=false,draw_map=true;
             int autoRun = 0;
             DrawMap();
 
@@ -157,16 +198,28 @@ namespace MastersOfPotsDeGeimWorld
 
             var s_out = Console.Out;
             StringWriter s_wrt = new StringWriter();
+           
 
             Team winner=null;
 
             while (gameOn)
             {
+                
                 for (int e = GameEntities.Count-1; e >= 0; --e)
                 {
+                    //draw mode logic
+                    draw_map = true;
+                    allowInput = true;
+
+                    if (draw_map_full && e != 0)
+                    {
+                        allowInput = false;
+                        draw_map = false;
+                    }
+                        
                     if (waiting_for_timer) {
                         ++e;
-                      continue;
+                        continue;
                     }
                     timer.Stop();
 
@@ -186,7 +239,8 @@ namespace MastersOfPotsDeGeimWorld
                     //input
                     if (allowInput)
                     {
-                        Console.WriteLine("Input:\n- \"exit\" to end program\n- \"auto n\" to autorun simulation.\n(n = amount of turns, no parameter runs the rest of the simulation)\n anykey to continue");
+                        Console.SetOut(s_out);
+                        Console.WriteLine("Input:\n- \"exit\" to end program\n- \"auto n\" to autorun simulation.\n(n = amount of turns, no parameter runs the rest of the simulation)\n- \"draw a\" to draw every entity turn\n- \"draw f\" to draw every full team turn\n\n- anykey to continue simulation");
                         
                         while (true)
                         {
@@ -217,6 +271,32 @@ namespace MastersOfPotsDeGeimWorld
                                     continue;
                                 }                            
                             }
+                            else if (input.StartsWith("draw"))
+                            {
+                                try
+                                {
+                                    var command = input.Substring(5,1);
+                                    if (command == "a")
+                                    {
+                                        draw_map_full = false;
+                                        Console.WriteLine("Drawing every turn.");
+                                    }
+                                    else if (command == "f")
+                                    {
+                                        draw_map_full = true;
+                                        Console.WriteLine("Drawing every full turn only.");
+                                    }
+                                    else {
+                                        Console.WriteLine("Command "+command+" not supported.");
+                                    }
+                                    continue;
+                                }
+                                catch
+                                {
+                                    Console.WriteLine("Faulty syntax. Try: \"draw a\"");
+                                    continue;
+                                }
+                            }
                             else
                             {
     #if DEBUG
@@ -226,9 +306,17 @@ namespace MastersOfPotsDeGeimWorld
                             break;
                         }
                     }
-                    timer.Start();
-                    waiting_for_timer=true;
-                    Console.Clear();
+
+
+                    if (draw_map)
+                    {
+                        timer.Start();
+                        waiting_for_timer = true;
+
+                        Console.Clear();
+
+                        s_wrt.GetStringBuilder().Clear();    
+                    }
                     Console.SetOut(s_wrt);
 
                     //updates
@@ -236,20 +324,24 @@ namespace MastersOfPotsDeGeimWorld
                     entity.Update();
                     entity.LateUpdate();
 
-                    Console.SetOut(s_out);
-                    //drawing
-                    
-                    Console.WriteLine("Turn " + Turn);
-                    Console.WriteLine(entity.MyTeam);
-                    Console.WriteLine(entity);
-
-                    DrawMap();
-
                     if (entity.Dead) GameEntities.Remove(entity);
+                    
+                    //drawing
+                    if (draw_map)
+                    {
+                        Console.SetOut(s_out);
 
-                    Console.Write(s_wrt.ToString()+"\n");
-                    s_wrt.GetStringBuilder().Clear();
+                        Console.WriteLine("Turn " + Turn);
+                        Console.WriteLine(entity.MyTeam);
+                        Console.WriteLine(entity);
 
+                        DrawMap();
+
+                        if (!draw_map_full)
+                        {
+                            Console.Write(s_wrt.ToString() + "\n");
+                        }
+                    }
 
                     if (DisableVictoryConditions) continue;
                     //game over (lazy polling checks)
@@ -301,7 +393,9 @@ namespace MastersOfPotsDeGeimWorld
                 }
                 
             }
-
+            Console.Clear();
+            Console.SetOut(s_out);
+            DrawMap();
 
             //gameover report
             Console.WriteLine("Gameover!");
@@ -311,7 +405,22 @@ namespace MastersOfPotsDeGeimWorld
                 Console.WriteLine("It's a tie!!!");
             }
             else {
-                Console.WriteLine(winner+" wins!");
+                Console.WriteLine("\nWinner:");
+                Console.WriteLine("- "+winner);
+
+                Console.WriteLine("\nLosers:");
+                foreach (var t in Teams) {
+                    if (t == winner) continue;
+                    Console.WriteLine("- "+t);
+                }
+            }
+
+
+            Console.WriteLine("Program over (e to exit)");
+            while (true)
+            {
+                var input = Console.ReadLine();
+                if (input.StartsWith("e")) break;
             }
             
         }

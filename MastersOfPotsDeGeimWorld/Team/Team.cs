@@ -14,6 +14,7 @@ namespace MastersOfPotsDeGeimWorld
         public ConsoleColor Color { get; private set; }
 
         public int DiamondCount { get; private set; }
+        public int DeadAmount { get; private set; }
 
 
         public Team(string name, int number, ConsoleColor color)
@@ -44,6 +45,7 @@ namespace MastersOfPotsDeGeimWorld
         public void TeamMemberDied(Entity teamMember)
         {
             TeamMembers.Remove(teamMember);
+            ++DeadAmount;
         }
 
         public void AddTeamMember(Entity teamMember)
@@ -51,14 +53,13 @@ namespace MastersOfPotsDeGeimWorld
             TeamMembers.Add(teamMember);
         }
 
-        public virtual void Update(Entity currentEntity)
-        {
+        public virtual void AddUnitToMap(int x, int y){}
 
-        }
+        public virtual void Update(Entity currentEntity){}
 
         public override string ToString() 
         {
-            return "Team " + Name + " diamonds: " + DiamondCount + " units: " + TeamMembers.Count + "";
+            return "Team " + Name + " diamonds: " + DiamondCount + " units: " + TeamMembers.Count + " dead: " + DeadAmount;
         }
     }
 }
