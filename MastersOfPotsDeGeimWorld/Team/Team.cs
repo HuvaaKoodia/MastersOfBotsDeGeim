@@ -61,5 +61,12 @@ namespace MastersOfPotsDeGeimWorld
         {
             return "Team " + Name + " diamonds: " + DiamondCount + " units: " + TeamMembers.Count + " dead: " + DeadAmount;
         }
+
+        public void ResetStats()
+        {
+            TeamMembers.Clear();
+            DiamondCount = 0;
+            DeadAmount = 0;
+        }
     }
 }
